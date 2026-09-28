@@ -1,0 +1,28 @@
+class Solution:
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+        premap = {i: [] for i in range(numCourses)}
+        for crs, pre in prerequisites: 
+            premap[crs].append(pre)
+        
+        visited = set()
+        path = []
+        def dfs(crs):
+            if crs in visited: 
+                return False
+            if premap[crs] == []:
+                if crs not in path: 
+                    path.append(crs)
+                return True
+            visited.add(crs)
+            for pre in premap[crs]:
+                if not dfs(pre):
+                    return False
+            visited.remove(crs)
+            premap[crs] = []
+            path.append(crs)
+            return True
+        
+        for crs in range(numCourses):
+            if not dfs(crs): return []
+        
+        return path
